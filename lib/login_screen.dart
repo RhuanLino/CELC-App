@@ -1,3 +1,5 @@
+import 'package:celc_app/core/requests.dart';
+import 'package:celc_app/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,18 +13,33 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
 
-  void _login() {
+  void _login() async {
     String email = _emailController.text;
     String senha = _senhaController.text;
 
-    if (email == 'teste@email.com' && senha == '123456') {
-      Navigator.pushReplacementNamed(context, '/nav'); // Redireciona para as telas com menu
-    } else {
+    if (email.isEmpty || senha.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('E-mail ou senha inválidos.')),
+        const SnackBar(content: Text('Por favor, preencha todos os campos')),
+      );  
+      return;
+    }
+  
+    final response = await login(email, senha);
+
+    if (response.containsKey('error')) {
+      // Se houver erro no login
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response['error'])),
+      );
+    } else {
+      // Sucesso no login, redirecionando para a tela principal
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Text('Insira seus dados'),
             SizedBox(height: 20),
             TextField(
-              controller: _emailController,
+              controller: _emailController, 
               decoration: InputDecoration(
                 labelText: 'Email',
                 prefixIcon: Icon(Icons.email),
