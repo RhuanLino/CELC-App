@@ -1,5 +1,5 @@
-import 'package:celc_app/core/requests.dart';
-import 'package:celc_app/home_screen.dart';
+import 'package:celc_app/core/services/auth_requests.dart';
+import 'package:celc_app/presentation/pages/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {

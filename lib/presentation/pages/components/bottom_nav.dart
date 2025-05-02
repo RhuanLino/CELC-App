@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'consultas_screen.dart';
-import 'debitos_screen.dart';
-import 'livraria_screen.dart';
+import '../home/home_screen.dart';
+import '../consultas/consultas_screen.dart';
+import '../debitos/debitos_screen.dart';
+import '../debitos/livraria_screen.dart';
 
 class BottomNavController extends StatefulWidget {
   const BottomNavController({super.key});
