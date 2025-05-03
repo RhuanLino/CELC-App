@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'verifica_cadastro_screen.dart';
-import 'verifica_trabalhador_screen.dart';
-import 'cadastro_screen.dart';
-import 'cadastro_trabalhador_screen.dart';
-import 'login_screen.dart';
-import 'recuperar_email_screen.dart';
-import 'recuperar_codigo_screen.dart';
-import 'recuperar_nova_senha_screen.dart';
-import 'home_screen.dart';
-import 'consultas_screen.dart';
-import 'debitos_screen.dart';
-import 'mensalidade_screen.dart';
-import 'livraria_screen.dart';
-import 'bottom_nav.dart';
+import 'presentation/pages/auth/verifica_cadastro_screen.dart';
+import 'presentation/pages/auth/verifica_trabalhador_screen.dart';
+import 'presentation/pages/auth/cadastro_screen.dart';
+import 'presentation/pages/auth/cadastro_trabalhador_screen.dart';
+import 'presentation/pages/auth/login_screen.dart';
+import 'presentation/pages/auth/recuperar_email_screen.dart';
+import 'presentation/pages/auth/recuperar_codigo_screen.dart';
+import 'presentation/pages/auth/recuperar_nova_senha_screen.dart';
+import 'presentation/pages/home/home_screen.dart';
+import 'presentation/pages/consultas/consultas_screen.dart';
+import 'presentation/pages/debitos/debitos_screen.dart';
+import 'presentation/pages/debitos/mensalidade_screen.dart';
+import 'presentation/pages/debitos/livraria_screen.dart';
+import 'presentation/pages/components/bottom_nav.dart';
 
 void main() {
   runApp(MyApp());
