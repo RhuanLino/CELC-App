@@ -1,37 +1,20 @@
+import 'package:celc_app/core/utils/auth_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:celc_app/presentation/App.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Cria uma instância do AuthNotifier que carregará o token automaticamente
+  final authNotifier = AuthNotifier();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  await authNotifier.init(); // Inicializa o AuthNotifier para carregar o token
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CELC App',
-      theme: ThemeData(
-        primaryColor: Color(0xFF199DFF),
-        scaffoldBackgroundColor: Colors.white,
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Color(0xFF199DFF)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Color(0xFF199DFF)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Color(0xFF199DFF), width: 2),
-          ),
-        ),
-      ),
-      home: App(),
-    );
-  }
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => authNotifier,
+      child: const App(),
+    ),
+  );
 }
