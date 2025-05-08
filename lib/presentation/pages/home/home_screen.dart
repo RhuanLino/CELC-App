@@ -1,7 +1,26 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final List<Map<String, dynamic>> items = [
+    {
+      'color': Colors.blue,
+      'title': 'Oferta Especial',
+      'subtitle': 'Descontos de até 50%',
+    },
+    {
+      'color': Colors.green,
+      'title': 'Novidades',
+      'subtitle': 'Confira nossos lançamentos',
+    },
+    {
+      'color': Colors.orange,
+      'title': 'Destaque',
+      'subtitle': 'Produtos em alta',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +46,59 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 180.0,
+                  autoPlay: true,
+                  viewportFraction: 1,
+                  enableInfiniteScroll: false,
+                  autoPlayInterval: Duration(seconds: 6),
+                  
+                ),
+                items:
+                    items.map((item) {
+                      return Container(
+                        margin: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          color: item['color'],
+                          borderRadius: BorderRadius.circular(10.0),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              item['color'],
+                              item['color'].withOpacity(0.7),
+                            ],
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['title'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
+                              Text(
+                                item['subtitle'],
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+              ),
               Container(
                 height: 150,
                 decoration: BoxDecoration(

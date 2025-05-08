@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // Sucesso no login, redirecionando para a tela principal
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     }
   }
