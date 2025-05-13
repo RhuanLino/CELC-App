@@ -6,19 +6,24 @@ class HomeScreen extends StatelessWidget {
 
   final List<Map<String, dynamic>> items = [
     {
-      'color': Colors.blue,
+      'color': Colors.white,
       'title': 'Oferta Especial',
       'subtitle': 'Descontos de até 50%',
     },
     {
-      'color': Colors.green,
+      'color': Colors.white,
       'title': 'Novidades',
       'subtitle': 'Confira nossos lançamentos',
     },
     {
-      'color': Colors.orange,
+      'color': Colors.white,
       'title': 'Destaque',
       'subtitle': 'Produtos em alta',
+    },
+    {
+      'color': Colors.white,
+      'title': 'Loja',
+      'subtitle': 'Promoção alta',
     },
   ];
 
@@ -46,58 +51,66 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 180.0,
-                  autoPlay: true,
-                  viewportFraction: 1,
-                  enableInfiniteScroll: false,
-                  autoPlayInterval: Duration(seconds: 6),
-                  
-                ),
-                items:
-                    items.map((item) {
-                      return Container(
-                        margin: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          color: item['color'],
-                          borderRadius: BorderRadius.circular(10.0),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              item['color'],
-                              item['color'].withOpacity(0.7),
-                            ],
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item['title'],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.bold,
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final itemWidth = constraints.maxWidth * 0.4; // 40% da largura
+                  final margin = 8.0; // Espaçamento entre itens
+
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                      initialPage: 0,
+                      height: 180.0,
+                      autoPlay: false,
+                      viewportFraction: (itemWidth + margin) / constraints.maxWidth,
+                      enableInfiniteScroll: false,
+                      padEnds: false,
+                      autoPlayInterval: Duration(seconds: 6),
+                      
+                    ),
+                    items:
+                        items.map((item) {
+                          return Container(
+                            width: itemWidth, // Largura fixa
+                            margin: EdgeInsets.only(right: margin),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: Offset(0, 0.5),
                                 ),
+                              ],
+                              color: item['color'],
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item['title'],
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  Text(
+                                    item['subtitle'],
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.9),
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                item['subtitle'],
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                            ),
+                          );
+                        }).toList(),
+                  );
+                } 
               ),
               Container(
                 height: 150,
