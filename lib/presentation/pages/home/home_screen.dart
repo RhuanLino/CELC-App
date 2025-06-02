@@ -1,29 +1,48 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:celc_app/presentation/pages/components/frequencia_progress.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
+  Color _getLightColor(Color baseColor) {
+    return baseColor.withOpacity(0.2);
+  }
+
+  Color _getDarkColor(Color baseColor) {
+    return HSLColor.fromColor(baseColor)
+        .withLightness(0.6) // Ajuste este valor para mudar a escuridão
+        .toColor();
+  }
+
   final List<Map<String, dynamic>> items = [
     {
-      'color': Colors.white,
+      'color': Colors.blue,
+      'icon': Icons.pedal_bike,
       'title': 'Oferta Especial',
       'subtitle': 'Descontos de até 50%',
+      'data': '10/23/2025',
     },
     {
-      'color': Colors.white,
+      'color': Colors.deepPurple,
+      'icon': Icons.home,
       'title': 'Novidades',
       'subtitle': 'Confira nossos lançamentos',
+      'data': '01/12/2025',
     },
     {
-      'color': Colors.white,
+      'color': const Color.fromARGB(255, 206, 28, 28),
+      'icon': Icons.kayaking,
       'title': 'Destaque',
       'subtitle': 'Produtos em alta',
+      'data': '10/01/2025',
     },
     {
-      'color': Colors.white,
+      'color': Colors.orange,
+      'icon': Icons.baby_changing_station,
       'title': 'Loja',
       'subtitle': 'Promoção alta',
+      'data': '04/05/2025',
     },
   ];
 
@@ -79,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                                   offset: Offset(0, 0.5),
                                 ),
                               ],
-                              color: item['color'],
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             child: Padding(
@@ -88,20 +107,42 @@ class HomeScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Container(
+                                    width: 35,
+                                    height: 35,
+                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    decoration: BoxDecoration(
+                                      color: _getLightColor(item['color']),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Icon(
+                                      item['icon'],
+                                      color: _getDarkColor(item['color']),
+                                      size: 20.0,
+                                    ),
+                                  ),
                                   Text(
                                     item['title'],
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 22.0,
+                                      fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  SizedBox(height: 5.0),
                                   Text(
                                     item['subtitle'],
                                     style: TextStyle(
                                       color: Colors.black.withOpacity(0.9),
-                                      fontSize: 16.0,
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  Text(
+                                    item['data'],
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                 ],
@@ -113,43 +154,18 @@ class HomeScreen extends StatelessWidget {
                 } 
               ),
               Container(
-                height: 150,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    image: AssetImage('assets/cesta.jpg'), // ou NetworkImage
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Colabore com a cesta básica',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          SizedBox(height: 8),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                            ),
-                            child: Text('Saiba mais'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                margin: EdgeInsets.only(top: 10),
+                child: FrequenciaProgress(
+                  percentage: 85,
+                  percentageAbsent: 10,
+                  presentDays: 17,
+                  absentDays: 3,
+                  // Optional parameters:
+                  width: 500, // custom width
+                  primaryColor: Colors.green, // custom primary color
+                  absentColor: Colors.red, // custom absent color
                 ),
               ),
-              SizedBox(height: 20),
-              Image.asset('assets/graficos.png'), // gráfico fake temporário
             ],
           ),
         ),

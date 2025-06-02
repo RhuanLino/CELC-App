@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const storage = FlutterSecureStorage();
-final apiUrl = Uri.parse('http://localhost:8080');
+final apiUrl = Uri.parse('http://159.203.172.72:8080');
 
 Future<Map<String, dynamic>> login(String email, String senha) async {
   final loginUrl = Uri.parse('$apiUrl/auth/login');
