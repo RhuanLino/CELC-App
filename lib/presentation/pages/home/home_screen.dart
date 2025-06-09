@@ -6,7 +6,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   Color _getLightColor(Color baseColor) {
-    return baseColor.withOpacity(0.2);
+    return baseColor.withOpacity(0.06);
   }
 
   Color _getDarkColor(Color baseColor) {
@@ -113,11 +113,11 @@ class HomeScreen extends StatelessWidget {
                                     margin: EdgeInsets.only(bottom: 8.0),
                                     decoration: BoxDecoration(
                                       color: _getLightColor(item['color']),
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(7),
                                     ),
                                     child: Icon(
                                       item['icon'],
-                                      color: _getDarkColor(item['color']),
+                                      color: item['color'],
                                       size: 20.0,
                                     ),
                                   ),
@@ -154,7 +154,7 @@ class HomeScreen extends StatelessWidget {
                 } 
               ),
               Container(
-                margin: EdgeInsets.only(top: 10),
+                margin: EdgeInsets.only(top: 18),
                 child: FrequenciaProgress(
                   percentage: 85,
                   percentageAbsent: 10,
