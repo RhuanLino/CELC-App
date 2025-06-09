@@ -40,7 +40,7 @@ class _AppState extends State<App> {
           title: 'CELC App',
           theme: ThemeData(
             primaryColor: Color(0xFF199DFF),
-            scaffoldBackgroundColor: Colors.white,
+            scaffoldBackgroundColor: Color(0xFFF9FAFB),
             inputDecorationTheme: InputDecorationTheme(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
