@@ -28,16 +28,16 @@ class FrequenciaProgress extends StatelessWidget {
 
     return Container(
       width: width ?? 300,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
+            color: Colors.black.withOpacity(0.1),
+            offset: Offset(0, 2),
+            spreadRadius: 1,
             blurRadius: 5,
-            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -47,35 +47,26 @@ class FrequenciaProgress extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-                // Text presentes
+              // Text presentes
               const Text(
-                'Minha frequência',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
-                ),
+                'Minha Frequência',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+                child: const Text(
+                  'Detalhes',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
                   ),
                 ),
-                child:
-                  const Text(
-                    'Detalhes',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    ),
-                  ), 
-                )
+              ),
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // Circular progress and linear progress side by side
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,9 +87,12 @@ class FrequenciaProgress extends StatelessWidget {
                           child: CircularProgressIndicator(
                             value: percentage / 100,
                             strokeWidth: 10, // mais espesso para destacar
-                            backgroundColor: theme.dividerColor,
+                            backgroundColor: Colors.grey[300],
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              _getPercentageColor(percentage, defaultPrimaryColor),
+                              _getPercentageColor(
+                                percentage,
+                                defaultPrimaryColor,
+                              ),
                             ),
                           ),
                         ),
@@ -111,11 +105,11 @@ class FrequenciaProgress extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4)
+                  const SizedBox(height: 4),
                 ],
               ),
               const SizedBox(width: 30),
-              
+
               // Linear progress bar with details
               Expanded(
                 child: Column(
@@ -126,16 +120,19 @@ class FrequenciaProgress extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Text presentes
-                      const Text(
-                        'Presentes',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        const Text(
+                          'Presentes',
+                          style: TextStyle(fontSize: 14.0),
                         ),
-                      ),
-                        _buildDayInfo('Presente', presentDays, defaultPrimaryColor, theme),
+                        _buildDayInfo(
+                          'Presente',
+                          presentDays,
+                          defaultPrimaryColor,
+                          theme,
+                        ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 8),
 
                     // Progress bar
@@ -143,7 +140,7 @@ class FrequenciaProgress extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
                         value: percentage / 100,
-                        backgroundColor: theme.dividerColor,
+                        backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(
                           _getPercentageColor(percentage, defaultPrimaryColor),
                         ),
@@ -156,13 +153,13 @@ class FrequenciaProgress extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Faltas',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        const Text('Faltas', style: TextStyle(fontSize: 14.0)),
+                        _buildDayInfo(
+                          'Ausente',
+                          absentDays,
+                          defaultAbsentColor,
+                          theme,
                         ),
-                        _buildDayInfo('Ausente', absentDays, defaultAbsentColor, theme),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -171,9 +168,12 @@ class FrequenciaProgress extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
                         value: percentageAbsent / 100,
-                        backgroundColor: theme.dividerColor,
+                        backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          _getPercentageColor(percentageAbsent, defaultAbsentColor),
+                          _getPercentageColor(
+                            percentageAbsent,
+                            defaultAbsentColor,
+                          ),
                         ),
                         minHeight: 10,
                       ),
@@ -195,16 +195,10 @@ class FrequenciaProgress extends StatelessWidget {
         Container(
           width: 10,
           height: 10,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(
-          '$days dias',
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text('$days dias', style: theme.textTheme.bodyMedium),
       ],
     );
   }
