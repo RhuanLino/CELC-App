@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:celc_app/presentation/pages/components/debitos_card.dart';
 import 'package:celc_app/presentation/pages/components/frequencia_progress.dart';
+import 'package:celc_app/presentation/pages/consultas/consultas_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -53,7 +55,7 @@ class HomeScreen extends StatelessWidget {
         title: RichText(
           text: TextSpan(
             text: 'Olá, ',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.black87, fontSize: 20),
             children: [
               TextSpan(
                 text: 'Usuário!',
@@ -62,8 +64,16 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        backgroundColor: Color(0xFF199DFF),
-        actions: [Icon(Icons.notifications, color: Colors.white)],
+        actionsPadding: EdgeInsets.only(right: 15),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            tooltip: 'Abrir notificações',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ConsultasScreen()));
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -72,19 +82,20 @@ class HomeScreen extends StatelessWidget {
             children: [
               LayoutBuilder(
                 builder: (context, constraints) {
-                  final itemWidth = constraints.maxWidth * 0.4; // 40% da largura
+                  final itemWidth =
+                      constraints.maxWidth * 0.5; // 40% da largura
                   final margin = 8.0; // Espaçamento entre itens
 
                   return CarouselSlider(
                     options: CarouselOptions(
                       initialPage: 0,
-                      height: 180.0,
+                      height: 150.0,
                       autoPlay: false,
-                      viewportFraction: (itemWidth + margin) / constraints.maxWidth,
+                      viewportFraction:
+                          (itemWidth + margin) / constraints.maxWidth,
                       enableInfiniteScroll: false,
                       padEnds: false,
                       autoPlayInterval: Duration(seconds: 6),
-                      
                     ),
                     items:
                         items.map((item) {
@@ -125,7 +136,7 @@ class HomeScreen extends StatelessWidget {
                                     item['title'],
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18.0,
+                                      fontSize: 15.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -134,7 +145,7 @@ class HomeScreen extends StatelessWidget {
                                     item['subtitle'],
                                     style: TextStyle(
                                       color: Colors.black.withOpacity(0.9),
-                                      fontSize: 15.0,
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   SizedBox(height: 10.0),
@@ -142,7 +153,7 @@ class HomeScreen extends StatelessWidget {
                                     item['data'],
                                     style: TextStyle(
                                       color: Colors.black.withOpacity(0.5),
-                                      fontSize: 12.0,
+                                      fontSize: 10.0,
                                     ),
                                   ),
                                 ],
@@ -151,10 +162,10 @@ class HomeScreen extends StatelessWidget {
                           );
                         }).toList(),
                   );
-                } 
+                },
               ),
               Container(
-                margin: EdgeInsets.only(top: 18),
+                margin: EdgeInsets.only(top: 15),
                 child: FrequenciaProgress(
                   percentage: 85,
                   percentageAbsent: 10,
@@ -165,6 +176,10 @@ class HomeScreen extends StatelessWidget {
                   primaryColor: Colors.green, // custom primary color
                   absentColor: Colors.red, // custom absent color
                 ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                child: DebitosCard(width: 500),
               ),
             ],
           ),
