@@ -1,7 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:celc_app/presentation/pages/components/debitos_card.dart';
 import 'package:celc_app/presentation/pages/components/frequencia_progress.dart';
-import 'package:celc_app/presentation/pages/consultas/consultas_screen.dart';
+import 'package:celc_app/presentation/pages/consultas/frequencia_screen.dart';
+import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -70,7 +71,7 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.notifications),
             tooltip: 'Abrir notificações',
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ConsultasScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PerfilScreen()));
             },
           ),
         ],

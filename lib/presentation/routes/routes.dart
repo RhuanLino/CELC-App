@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 // Auth
@@ -14,10 +15,11 @@ import '../pages/auth/recuperar_nova_senha_screen.dart';
 import '../pages/home/home_screen.dart';
 
 // Outras páginas
-import '../pages/consultas/consultas_screen.dart';
+import '../pages/consultas/frequencia_screen.dart';
 import '../pages/debitos/debitos_screen.dart';
 import '../pages/debitos/mensalidade_screen.dart';
 import '../pages/debitos/livraria_screen.dart';
+import '../pages/perfil/perfil_screen.dart';
 
 class AppRoutes {
   static const String initial = '/';
@@ -29,10 +31,11 @@ class AppRoutes {
   static const String recuperarCodigo = '/recuperar_codigo';
   static const String recuperarNovaSenha = '/recuperar_nova';
   static const String home = '/home';
-  static const String consultas = '/consultas';
+  static const String consultas = '/frequencia';
   static const String debitos = '/debitos';
   static const String mensalidade = '/mensalidade';
   static const String livraria = '/livraria';
+  static const String perfil = '/perfil';
 }
 
 class RouteGenerator {
@@ -46,9 +49,10 @@ class RouteGenerator {
     AppRoutes.recuperarCodigo: (_) => RecuperarCodigoScreen(),
     AppRoutes.recuperarNovaSenha: (_) => RecuperarNovaSenhaScreen(),
     AppRoutes.home: (_) => HomeScreen(),
-    AppRoutes.consultas: (_) => ConsultasScreen(),
+    AppRoutes.consultas: (_) => FrequenciaScreen(),
     AppRoutes.debitos: (_) => DebitosScreen(),
     AppRoutes.mensalidade: (_) => MensalidadeScreen(),
     AppRoutes.livraria: (_) => LivrariaScreen(),
+    AppRoutes.perfil: (_) => PerfilScreen(),
   };
 }

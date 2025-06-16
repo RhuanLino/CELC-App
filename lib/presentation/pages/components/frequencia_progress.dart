@@ -1,3 +1,4 @@
+import 'package:celc_app/presentation/pages/consultas/frequencia_screen.dart';
 import 'package:flutter/material.dart';
 
 class FrequenciaProgress extends StatelessWidget {
@@ -53,7 +54,13 @@ class FrequenciaProgress extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => FrequenciaScreen()),
+                    (route) => false,
+                  );
+                },
                 child: const Text(
                   'Detalhes',
                   style: TextStyle(
