@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:celc_app/core/services/debitos_requests.dart';
 
-// PÁGINA PRINCIPAL QUE ORGANIZA AS ABAS
-class DebitosScreen extends StatelessWidget {
+class DebitosScreen extends StatefulWidget {
   const DebitosScreen({super.key});
 
+  @override
+  _DebitosScreen createState() => _DebitosScreen();
+}
+
+// PÁGINA PRINCIPAL QUE ORGANIZA AS ABAS
+class _DebitosScreen extends State<DebitosScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -74,16 +80,27 @@ class DebitosScreen extends StatelessWidget {
 }
 
 // WIDGET PARA O CONTEÚDO DA ABA LIVRARIA
-class AbaLivraria extends StatelessWidget {
+class AbaLivraria extends StatefulWidget {
   const AbaLivraria({super.key});
+
+  @override
+  State<AbaLivraria> createState() => _AbaLivrariaState();
+}
+
+class _AbaLivrariaState extends State<AbaLivraria> {
+  late Future<List<dynamic>> futureDebitos;
+
+  @override
+  void initState() {
+    super.initState();
+    futureDebitos = getDebitosData() as Future<List>; // sua chamada de API
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // SEÇÃO SUPERIOR COM OS CARDS DE RESUMO
         _ResumoDebitos(),
-        // ÁREA DO TÍTULO E BOTÃO "PAGAR DÉBITOS"
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: Row(
@@ -94,75 +111,55 @@ class AbaLivraria extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
-                onPressed: () {
-                  // Ação para o botão de pagar débitos
-                },
+                onPressed: () {},
                 icon: const Icon(Icons.payment, size: 16),
                 label: const Text('Pagar Débitos'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade700,
+                  backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
                 ),
-              )
+              ),
             ],
           ),
         ),
-        // LISTA DE ITENS AGRUPADOS POR DATA
+
         Expanded(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            children: [
-              _SecaoItens(
-                data: '14 de junho de 2023',
-                total: 89.70,
-                status: 'Pendente',
-                itens: [
-                  _Item(nome: 'Dom Casmurro', quantidade: 1, preco: 39.90),
-                  _Item(nome: 'Caderno Universitário', quantidade: 2, preco: 24.90),
-                ],
-              ),
-              _SecaoItens(
-                data: '09 de junho de 2023',
-                total: 22.00,
-                status: 'Pago',
-                itens: [
-                  _Item(nome: 'Caneta Esferográfica', quantidade: 5, preco: 3.50),
-                  _Item(nome: 'Lápis', quantidade: 3, preco: 1.50),
-                ],
-              ),
-              _SecaoItens(
-                data: '04 de junho de 2023',
-                total: 34.90,
-                status: 'Pendente',
-                // Simulando uma seção sem itens visíveis como na imagem
-                itens: [],
-              ),
-              const SizedBox(height: 16),
-              // TEXTO FINAL COM O TOTAL A PAGAR
-              Align(
-                alignment: Alignment.centerRight,
-                child: RichText(
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.grey[700],
-                          fontWeight: FontWeight.normal,
-                        ),
-                    children: const <TextSpan>[
-                      TextSpan(text: 'Total a pagar '),
-                      TextSpan(
-                        text: 'R\$ 124,60',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
+          child: FutureBuilder<List<dynamic>>(
+            future: futureDebitos,
+            builder: (context, snapshot) {
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text("Erro: ${snapshot.error}"));
+              }
+
+              final dados = snapshot.data ?? [];
+
+              if (dados.isEmpty) {
+                return const Center(child: Text("Nenhum item encontrado."));
+              }
+
+              return ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: dados.map((debito) {
+                  return _SecaoItens(
+                    data: debito['data'],
+                    total: debito['total'],
+                    status: debito['data_pagamento'] == null ? 'Pendente' : 'Pago',
+                    itens: (debito['produtos'] as List).map((item) {
+                      return _Item(
+                        nome: item['produto'],
+                        quantidade: item['quantidade'],
+                        preco: item['preco'],
+                      );
+                    }).toList(),
+                  );
+                }).toList(),
+              );
+            },
           ),
         ),
       ],
