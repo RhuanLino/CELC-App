@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:celc_app/core/services/debitos_requests.dart';
+import 'package:intl/intl.dart';
 
 class DebitosScreen extends StatefulWidget {
   const DebitosScreen({super.key});
@@ -146,7 +147,8 @@ class _AbaLivrariaState extends State<AbaLivraria> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: dados.map((debito) {
                   return _SecaoItens(
-                    data: debito['data'],
+                    data: DateFormat("d 'de' MMMM 'de' y", 'pt_BR')
+                      .format(DateTime.parse(debito['data'])),
                     total: debito['total'],
                     status: debito['data_pagamento'] == null ? 'Pendente' : 'Pago',
                     itens: (debito['produtos'] as List).map((item) {
@@ -319,7 +321,9 @@ class _Item extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(nome, style: const TextStyle(fontSize: 16)),
+              Expanded(child: 
+                Text(nome, style: const TextStyle(fontSize: 16), softWrap: true),
+              ),
               const SizedBox(height: 2),
               Text(
                 '$quantidade unidade${quantidade > 1 ? 's' : ''} × R\$ ${preco.toStringAsFixed(2)}',
