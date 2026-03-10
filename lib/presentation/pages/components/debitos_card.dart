@@ -27,7 +27,7 @@ class _DebitosCardState extends State<DebitosCard> {
   @override
   Widget build(BuildContext context) {
     double valorMensalidade = 500;
-    double valorLivraria = 80;
+    double valorLivraria = 8;
     double valorOutros = 100;
     double valorTotal = valorMensalidade + valorLivraria + valorOutros;
 

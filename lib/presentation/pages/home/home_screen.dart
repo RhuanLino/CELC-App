@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:celc_app/presentation/pages/components/debitos_card.dart';
 import 'package:celc_app/presentation/pages/components/frequencia_progress.dart';
 import 'package:celc_app/presentation/pages/consultas/frequencia_screen.dart';
+import 'package:celc_app/core/constants/debitos_constants.dart';
 import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -168,10 +169,10 @@ class HomeScreen extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 15),
                 child: FrequenciaProgress(
-                  percentage: 85,
-                  percentageAbsent: 10,
-                  presentDays: 17,
-                  absentDays: 3,
+                  percentage: 0,
+                  percentageAbsent: 0,
+                  presentDays: 0,
+                  absentDays: 0,
                   // Optional parameters:
                   width: 500, // custom width
                   primaryColor: Colors.green, // custom primary color
@@ -180,7 +181,7 @@ class HomeScreen extends StatelessWidget {
               ),
               Container(
                 margin: EdgeInsets.only(top: 15),
-                child: DebitosCard(width: 500),
+                child: DebitosCard(width: 500, valorLivraria: DebitosConstants.totalDebitosLivraria,),
               ),
             ],
           ),

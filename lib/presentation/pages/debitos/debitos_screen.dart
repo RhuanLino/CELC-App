@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:celc_app/core/services/debitos_requests.dart';
-import 'package:intl/intl.dart';
+import 'package:celc_app/core/constants/debitos_constants.dart';
+import 'package:intl/intl.dart';	
 
 class DebitosScreen extends StatefulWidget {
   const DebitosScreen({super.key});
@@ -91,17 +92,33 @@ class AbaLivraria extends StatefulWidget {
 class _AbaLivrariaState extends State<AbaLivraria> {
   late Future<List<dynamic>> futureDebitos;
 
+	double totalDebitosLivraria = 0.0;
+
   @override
   void initState() {
     super.initState();
     futureDebitos = getDebitosData() as Future<List>; // sua chamada de API
+
+		futureDebitos.then((debitoList) {
+			double total = 0.0;
+
+			for (var debito in debitoList) {
+				total += (debito['total'] ?? 0).toDouble();
+			}
+
+			setState(() {
+				totalDebitosLivraria = total;
+			});
+
+			DebitosConstants.totalDebitosLivraria = total;
+		});
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _ResumoDebitos(),
+        _ResumoDebitos(totalDebitosLivraria: totalDebitosLivraria,),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: Row(
@@ -171,6 +188,13 @@ class _AbaLivrariaState extends State<AbaLivraria> {
 
 // WIDGET QUE CONTÉM A LINHA DE CARDS DE RESUMO
 class _ResumoDebitos extends StatelessWidget {
+
+	final double totalDebitosLivraria;
+
+  const _ResumoDebitos({
+    required this.totalDebitosLivraria,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -181,21 +205,21 @@ class _ResumoDebitos extends StatelessWidget {
           _CardResumo(
             icon: Icons.receipt_long_outlined,
             label: 'Débitos Livraria',
-            valor: 'R\$ 124,60',
+            valor: 'R\$ $totalDebitosLivraria',
             color: Colors.blue.shade700,
           ),
           const SizedBox(width: 12),
           _CardResumo(
             icon: Icons.check_circle_outline,
             label: 'Mensalidades Pagas',
-            valor: '2',
+            valor: '0',
             color: Colors.green.shade600,
           ),
           const SizedBox(width: 12),
           _CardResumo(
             icon: Icons.error_outline,
             label: 'Mensalidades Pendentes',
-            valor: '3',
+            valor: '0',
             color: Colors.orange.shade800,
           ),
         ],
@@ -318,18 +342,18 @@ class _Item extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: 
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(nome, style: const TextStyle(fontSize: 16), softWrap: true),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                '$quantidade unidade${quantidade > 1 ? 's' : ''} × R\$ ${preco.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-              ),
-            ],
+                const SizedBox(height: 2),
+                Text(
+                  '$quantidade unidade${quantidade > 1 ? 's' : ''} × R\$ ${preco.toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                ),
+              ],
+            )
           ),
           Text(
             'R\$ ${(quantidade * preco).toStringAsFixed(2)}',
