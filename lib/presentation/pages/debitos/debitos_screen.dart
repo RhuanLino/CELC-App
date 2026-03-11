@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:celc_app/core/services/debitos_requests.dart';
-import 'package:celc_app/core/constants/debitos_constants.dart';
+import 'package:provider/provider.dart';
+import 'package:celc_app/providers/debitosProvider.dart';
 import 'package:intl/intl.dart';	
 
 class DebitosScreen extends StatefulWidget {
@@ -106,11 +107,11 @@ class _AbaLivrariaState extends State<AbaLivraria> {
 				total += (debito['total'] ?? 0).toDouble();
 			}
 
+      Provider.of<DebitosProvider>(context, listen: false).setTotal(total);
+
 			setState(() {
 				totalDebitosLivraria = total;
 			});
-
-			DebitosConstants.totalDebitosLivraria = total;
 		});
   }
 

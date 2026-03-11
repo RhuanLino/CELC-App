@@ -2,12 +2,28 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:celc_app/presentation/pages/components/debitos_card.dart';
 import 'package:celc_app/presentation/pages/components/frequencia_progress.dart';
 import 'package:celc_app/presentation/pages/consultas/frequencia_screen.dart';
-import 'package:celc_app/core/constants/debitos_constants.dart';
 import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
+import 'package:celc_app/providers/debitosProvider.dart';
+import 'package:celc_app/providers/homeProvider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+   
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Color _getLightColor(Color baseColor) {
     return baseColor.withOpacity(0.06);
@@ -22,36 +38,26 @@ class HomeScreen extends StatelessWidget {
   final List<Map<String, dynamic>> items = [
     {
       'color': Colors.blue,
-      'icon': Icons.pedal_bike,
-      'title': 'Oferta Especial',
-      'subtitle': 'Descontos de até 50%',
-      'data': '10/23/2025',
+      'icon': Icons.card_giftcard,
+      'title': 'App Celc!',
+      'subtitle': 'Aproveite!',
+      'data': 'Hoje',
     },
     {
-      'color': Colors.deepPurple,
-      'icon': Icons.home,
-      'title': 'Novidades',
-      'subtitle': 'Confira nossos lançamentos',
-      'data': '01/12/2025',
-    },
-    {
-      'color': const Color.fromARGB(255, 206, 28, 28),
-      'icon': Icons.kayaking,
-      'title': 'Destaque',
-      'subtitle': 'Produtos em alta',
-      'data': '10/01/2025',
-    },
-    {
-      'color': Colors.orange,
-      'icon': Icons.baby_changing_station,
-      'title': 'Loja',
-      'subtitle': 'Promoção alta',
-      'data': '04/05/2025',
+      'color': Colors.amber,
+      'icon': Icons.add_alert_rounded,
+      'title': 'Anúncios',
+      'subtitle': 'Fique atento aos anúncios',
+      'data': 'Hoje',
     },
   ];
 
   @override
   Widget build(BuildContext context) {
+
+    final totalLivraria = Provider.of<DebitosProvider>(context).totalDebitosLivraria;
+    final nomeEspiritual = Provider.of<HomeProvider>(context).nomeEspiritual;
+
     return Scaffold(
       appBar: AppBar(
         title: RichText(
@@ -60,7 +66,7 @@ class HomeScreen extends StatelessWidget {
             style: TextStyle(color: Colors.black87, fontSize: 20),
             children: [
               TextSpan(
-                text: 'Usuário!',
+                text: '$nomeEspiritual!',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -181,7 +187,7 @@ class HomeScreen extends StatelessWidget {
               ),
               Container(
                 margin: EdgeInsets.only(top: 15),
-                child: DebitosCard(width: 500, valorLivraria: DebitosConstants.totalDebitosLivraria,),
+                child: DebitosCard(width: 500, valorLivraria: totalLivraria),
               ),
             ],
           ),

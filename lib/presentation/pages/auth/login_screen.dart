@@ -1,7 +1,9 @@
 import 'package:celc_app/core/services/auth_requests.dart';
 import 'package:celc_app/presentation/pages/home/home_screen.dart';
 import 'package:celc_app/presentation/routes/routes.dart';
+import 'package:celc_app/providers/homeProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     final response = await login(email, senha);
+    context.read<HomeProvider>().setNomeEspiritual(response['nome']);
 
     if (response.containsKey('error')) {
       // Se houver erro no login
