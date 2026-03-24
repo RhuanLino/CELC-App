@@ -1,4 +1,4 @@
-import 'package:celc_app/presentation/pages/consultas/frequencia_screen.dart';
+import 'package:celc_app/presentation/pages/frequence/frequence_page.dart';
 import 'package:flutter/material.dart';
 
 class FrequenciaProgress extends StatelessWidget {
@@ -57,7 +57,7 @@ class FrequenciaProgress extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (_) => FrequenciaScreen()),
+                    MaterialPageRoute(builder: (_) => FrequencePage()),
                     (route) => false,
                   );
                 },

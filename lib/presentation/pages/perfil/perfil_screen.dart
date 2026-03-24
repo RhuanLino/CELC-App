@@ -1,17 +1,16 @@
 // profile_screen.dart
-import 'package:celc_app/presentation/pages/auth/login_screen.dart';
+import 'package:celc_app/presentation/pages/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:celc_app/core/utils/auth_notifier.dart';
 
 class PerfilScreen extends StatelessWidget {
-
   const PerfilScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthNotifier>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meu Perfil'),
@@ -22,7 +21,7 @@ class PerfilScreen extends StatelessWidget {
               await auth.logout();
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => LoginScreen()),
+                MaterialPageRoute(builder: (_) => LoginPage()),
                 (route) => false,
               );
             },
@@ -54,18 +53,12 @@ class PerfilScreen extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           'Orlando Lino',
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
           'orlandolino73@gmail.com',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
         ),
       ],
     );
@@ -82,10 +75,7 @@ class PerfilScreen extends StatelessWidget {
               children: [
                 const Text(
                   'Informações Acadêmicas',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 8),
                 _buildInfoRow('Matrícula', '20230001'),
@@ -104,10 +94,7 @@ class PerfilScreen extends StatelessWidget {
               children: [
                 const Text(
                   'Estatísticas',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 8),
                 _buildInfoRow('Presenças este mês', '22'),
@@ -172,10 +159,10 @@ class PerfilScreen extends StatelessWidget {
             onPressed: () async {
               final auth = Provider.of<AuthNotifier>(context, listen: false);
               await auth.logout();
-              
+
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => LoginScreen()),
+                MaterialPageRoute(builder: (_) => LoginPage()),
                 (route) => false,
               );
             },

@@ -1,11 +1,11 @@
 import 'package:celc_app/core/utils/auth_notifier.dart';
-import 'package:celc_app/presentation/pages/auth/login_screen.dart';
+import 'package:celc_app/presentation/pages/auth/login_page.dart';
 import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'pages/home/home_screen.dart';
-import 'pages/debitos/debitos_screen.dart';
-import 'pages/consultas/frequencia_screen.dart';
+import 'pages/home/home_page.dart';
+import 'pages/debitos/debits_page.dart';
+import 'pages/frequence/frequence_page.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -18,10 +18,10 @@ class _AppState extends State<App> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    HomeScreen(),
-    FrequenciaScreen(),
-    DebitosScreen(),
-    PerfilScreen()
+    HomePage(),
+    FrequencePage(),
+    DebitsPage(),
+    PerfilScreen(),
   ];
 
   @override
@@ -32,7 +32,7 @@ class _AppState extends State<App> {
         if (!auth.isAuthenticated) {
           return const MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: LoginScreen(),
+            home: LoginPage(),
           );
         }
 

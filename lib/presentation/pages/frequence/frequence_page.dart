@@ -1,8 +1,8 @@
-import 'package:celc_app/presentation/pages/components/grafico_barras.dart';
+import 'package:celc_app/presentation/widgets/grafico_barras.dart';
 import 'package:flutter/material.dart';
 
 // --- Widget da Tela de Detalhes da Frequência ---
-class FrequenciaScreen extends StatelessWidget {
+class FrequencePage extends StatelessWidget {
   final Map<String, Map<String, int>> monthlyAttendance = {
     'Semana 1': {'presence': 8, 'absence': 2},
     'Semana 2': {'presence': 7, 'absence': 3},
@@ -10,7 +10,7 @@ class FrequenciaScreen extends StatelessWidget {
     'Semana 4': {'presence': 6, 'absence': 4},
   };
 
-  FrequenciaScreen({super.key});
+  FrequencePage({super.key});
 
   @override
   Widget build(BuildContext context) {

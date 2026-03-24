@@ -1,25 +1,24 @@
-
 import 'package:flutter/material.dart';
 
 // Auth
-import '../pages/auth/verifica_cadastro_screen.dart';
-import '../pages/auth/verifica_trabalhador_screen.dart';
-import '../pages/auth/cadastro_screen.dart';
-import '../pages/auth/cadastro_trabalhador_screen.dart';
-import '../pages/auth/login_screen.dart';
-import '../pages/auth/recuperar_email_screen.dart';
-import '../pages/auth/recuperar_codigo_screen.dart';
-import '../pages/auth/recuperar_nova_senha_screen.dart';
+import '../../presentation/pages/auth/verifica_cadastro_screen.dart';
+import '../../presentation/pages/auth/verifica_trabalhador_screen.dart';
+import '../../presentation/pages/auth/cadastro_screen.dart';
+import '../../presentation/pages/auth/cadastro_trabalhador_screen.dart';
+import '../../presentation/pages/auth/login_page.dart';
+import '../../presentation/pages/auth/recuperar_email_screen.dart';
+import '../../presentation/pages/auth/recuperar_codigo_screen.dart';
+import '../../presentation/pages/auth/recuperar_nova_senha_screen.dart';
 
 // Home e Components
-import '../pages/home/home_screen.dart';
+import '../../presentation/pages/home/home_page.dart';
 
 // Outras páginas
-import '../pages/consultas/frequencia_screen.dart';
-import '../pages/debitos/debitos_screen.dart';
-import '../pages/debitos/mensalidade_screen.dart';
-import '../pages/debitos/livraria_screen.dart';
-import '../pages/perfil/perfil_screen.dart';
+import '../../presentation/pages/frequence/frequence_page.dart';
+import '../../presentation/pages/debitos/debits_page.dart';
+import '../../presentation/pages/debitos/mensalidade_screen.dart';
+import '../../presentation/pages/debitos/livraria_screen.dart';
+import '../../presentation/pages/perfil/perfil_screen.dart';
 
 class AppRoutes {
   static const String initial = '/';
@@ -44,13 +43,13 @@ class RouteGenerator {
     AppRoutes.verificaTrabalhador: (_) => VerificaTrabalhadorScreen(),
     AppRoutes.cadastro: (_) => CadastroScreen(),
     AppRoutes.cadastroTrabalhador: (_) => CadastroTrabalhadorScreen(),
-    AppRoutes.login: (_) => LoginScreen(),
+    AppRoutes.login: (_) => LoginPage(),
     AppRoutes.recuperarEmail: (_) => RecuperarEmailScreen(),
     AppRoutes.recuperarCodigo: (_) => RecuperarCodigoScreen(),
     AppRoutes.recuperarNovaSenha: (_) => RecuperarNovaSenhaScreen(),
-    AppRoutes.home: (_) => HomeScreen(),
-    AppRoutes.consultas: (_) => FrequenciaScreen(),
-    AppRoutes.debitos: (_) => DebitosScreen(),
+    AppRoutes.home: (_) => HomePage(),
+    AppRoutes.consultas: (_) => FrequencePage(),
+    AppRoutes.debitos: (_) => DebitsPage(),
     AppRoutes.mensalidade: (_) => MensalidadeScreen(),
     AppRoutes.livraria: (_) => LivrariaScreen(),
     AppRoutes.perfil: (_) => PerfilScreen(),

@@ -1,23 +1,23 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:celc_app/presentation/pages/components/debitos_card.dart';
-import 'package:celc_app/presentation/pages/components/frequencia_progress.dart';
-import 'package:celc_app/presentation/pages/consultas/frequencia_screen.dart';
+import 'package:celc_app/data/services/debitos_service.dart';
+import 'package:celc_app/presentation/widgets/debitos_card.dart';
+import 'package:celc_app/presentation/widgets/frequencia_progress.dart';
+import 'package:celc_app/presentation/pages/frequence/frequence_page.dart';
 import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
-import 'package:celc_app/providers/debitosProvider.dart';
-import 'package:celc_app/providers/homeProvider.dart';
+import 'package:celc_app/core/providers/debitosProvider.dart';
+import 'package:celc_app/core/providers/homeProvider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-   
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-
+class _HomePageState extends State<HomePage> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   @override
@@ -54,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    final totalLivraria = Provider.of<DebitosProvider>(context).totalDebitosLivraria;
+    final totalLivraria =
+        Provider.of<DebitosProvider>(context).totalDebitosLivraria;
     final nomeEspiritual = Provider.of<HomeProvider>(context).nomeEspiritual;
 
     return Scaffold(
@@ -78,7 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.notifications),
             tooltip: 'Abrir notificações',
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PerfilScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PerfilScreen()),
+              );
             },
           ),
         ],

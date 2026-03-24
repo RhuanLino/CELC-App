@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:celc_app/core/services/debitos_requests.dart';
+import 'package:celc_app/data/services/debitos_service.dart';
 import 'package:provider/provider.dart';
-import 'package:celc_app/providers/debitosProvider.dart';
-import 'package:intl/intl.dart';	
+import 'package:celc_app/core/providers/debitosProvider.dart';
+import 'package:intl/intl.dart';
 
-class DebitosScreen extends StatefulWidget {
-  const DebitosScreen({super.key});
+class DebitsPage extends StatefulWidget {
+  const DebitsPage({super.key});
 
   @override
-  _DebitosScreen createState() => _DebitosScreen();
+  _DebitsPage createState() => _DebitsPage();
 }
 
 // PÁGINA PRINCIPAL QUE ORGANIZA AS ABAS
-class _DebitosScreen extends State<DebitosScreen> {
+class _DebitsPage extends State<DebitsPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -38,7 +38,11 @@ class _DebitosScreen extends State<DebitosScreen> {
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.calendar_today_outlined, size: 14, color: Colors.blue),
+                  Icon(
+                    Icons.calendar_today_outlined,
+                    size: 14,
+                    color: Colors.blue,
+                  ),
                   SizedBox(width: 8),
                   Text(
                     'quarta-feira, 11 de junho de 2025',
@@ -57,13 +61,21 @@ class _DebitosScreen extends State<DebitosScreen> {
               Tab(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.book_outlined), SizedBox(width: 8), Text("Livraria")],
+                  children: [
+                    Icon(Icons.book_outlined),
+                    SizedBox(width: 8),
+                    Text("Livraria"),
+                  ],
                 ),
               ),
               Tab(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.calendar_month_outlined), SizedBox(width: 8), Text("Mensalidade")],
+                  children: [
+                    Icon(Icons.calendar_month_outlined),
+                    SizedBox(width: 8),
+                    Text("Mensalidade"),
+                  ],
                 ),
               ),
             ],
@@ -93,33 +105,34 @@ class AbaLivraria extends StatefulWidget {
 class _AbaLivrariaState extends State<AbaLivraria> {
   late Future<List<dynamic>> futureDebitos;
 
-	double totalDebitosLivraria = 0.0;
+  double totalDebitosLivraria = 0.0;
 
   @override
   void initState() {
     super.initState();
-    futureDebitos = getDebitosData() as Future<List>; // sua chamada de API
+    futureDebitos =
+        DebitosService().getDebitosData() as Future<List>; // sua chamada de API
 
-		futureDebitos.then((debitoList) {
-			double total = 0.0;
+    futureDebitos.then((debitoList) {
+      double total = 0.0;
 
-			for (var debito in debitoList) {
-				total += (debito['total'] ?? 0).toDouble();
-			}
+      for (var debito in debitoList) {
+        total += (debito['total'] ?? 0).toDouble();
+      }
 
       Provider.of<DebitosProvider>(context, listen: false).setTotal(total);
 
-			setState(() {
-				totalDebitosLivraria = total;
-			});
-		});
+      setState(() {
+        totalDebitosLivraria = total;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _ResumoDebitos(totalDebitosLivraria: totalDebitosLivraria,),
+        _ResumoDebitos(totalDebitosLivraria: totalDebitosLivraria),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: Row(
@@ -146,7 +159,6 @@ class _AbaLivrariaState extends State<AbaLivraria> {
           child: FutureBuilder<List<dynamic>>(
             future: futureDebitos,
             builder: (context, snapshot) {
-
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -163,21 +175,28 @@ class _AbaLivrariaState extends State<AbaLivraria> {
 
               return ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: dados.map((debito) {
-                  return _SecaoItens(
-                    data: DateFormat("d 'de' MMMM 'de' y", 'pt_BR')
-                      .format(DateTime.parse(debito['data'])),
-                    total: debito['total'],
-                    status: debito['data_pagamento'] == null ? 'Pendente' : 'Pago',
-                    itens: (debito['produtos'] as List).map((item) {
-                      return _Item(
-                        nome: item['produto'],
-                        quantidade: item['quantidade'],
-                        preco: item['preco'],
+                children:
+                    dados.map((debito) {
+                      return _SecaoItens(
+                        data: DateFormat(
+                          "d 'de' MMMM 'de' y",
+                          'pt_BR',
+                        ).format(DateTime.parse(debito['data'])),
+                        total: debito['total'],
+                        status:
+                            debito['data_pagamento'] == null
+                                ? 'Pendente'
+                                : 'Pago',
+                        itens:
+                            (debito['produtos'] as List).map((item) {
+                              return _Item(
+                                nome: item['produto'],
+                                quantidade: item['quantidade'],
+                                preco: item['preco'],
+                              );
+                            }).toList(),
                       );
                     }).toList(),
-                  );
-                }).toList(),
               );
             },
           ),
@@ -189,12 +208,9 @@ class _AbaLivrariaState extends State<AbaLivraria> {
 
 // WIDGET QUE CONTÉM A LINHA DE CARDS DE RESUMO
 class _ResumoDebitos extends StatelessWidget {
+  final double totalDebitosLivraria;
 
-	final double totalDebitosLivraria;
-
-  const _ResumoDebitos({
-    required this.totalDebitosLivraria,
-  });
+  const _ResumoDebitos({required this.totalDebitosLivraria});
 
   @override
   Widget build(BuildContext context) {
@@ -281,12 +297,18 @@ class _SecaoItens extends StatelessWidget {
   final String status;
   final List<_Item> itens;
 
-  const _SecaoItens({required this.data, required this.total, required this.status, required this.itens});
+  const _SecaoItens({
+    required this.data,
+    required this.total,
+    required this.status,
+    required this.itens,
+  });
 
   @override
   Widget build(BuildContext context) {
     final bool isPaid = status == 'Pago';
-    final Color statusColor = isPaid ? Colors.green.shade600 : Colors.orange.shade800;
+    final Color statusColor =
+        isPaid ? Colors.green.shade600 : Colors.orange.shade800;
 
     return Card(
       elevation: 0.5,
@@ -300,23 +322,36 @@ class _SecaoItens extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(data, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(
+              data,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             if (itens.isNotEmpty) const Divider(height: 24),
             ...itens,
             const Divider(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Total: R\$ ${total.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w500)),
+                Text(
+                  'Total: R\$ ${total.toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     status,
-                    style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 12),
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],
@@ -334,7 +369,11 @@ class _Item extends StatelessWidget {
   final int quantidade;
   final double preco;
 
-  const _Item({required this.nome, required this.quantidade, required this.preco});
+  const _Item({
+    required this.nome,
+    required this.quantidade,
+    required this.preco,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -347,14 +386,18 @@ class _Item extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(nome, style: const TextStyle(fontSize: 16), softWrap: true),
+                Text(
+                  nome,
+                  style: const TextStyle(fontSize: 16),
+                  softWrap: true,
+                ),
                 const SizedBox(height: 2),
                 Text(
                   '$quantidade unidade${quantidade > 1 ? 's' : ''} × R\$ ${preco.toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                 ),
               ],
-            )
+            ),
           ),
           Text(
             'R\$ ${(quantidade * preco).toStringAsFixed(2)}',
