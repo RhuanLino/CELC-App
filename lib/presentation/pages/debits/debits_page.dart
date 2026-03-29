@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:celc_app/data/services/debitos_service.dart';
+import 'package:celc_app/data/services/debits_service.dart';
 import 'package:provider/provider.dart';
 import 'package:celc_app/core/providers/debitosProvider.dart';
 import 'package:intl/intl.dart';
@@ -110,8 +110,7 @@ class _AbaLivrariaState extends State<AbaLivraria> {
   @override
   void initState() {
     super.initState();
-    futureDebitos =
-        DebitosService().getDebitosData() as Future<List>; // sua chamada de API
+    futureDebitos = DebitsService().getDebitosData(); // sua chamada de API
 
     futureDebitos.then((debitoList) {
       double total = 0.0;

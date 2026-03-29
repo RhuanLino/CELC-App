@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:celc_app/core/utils/utils.dart';
 import 'package:http/http.dart' as http;
 
-class DebitosService {
+class DebitsService {
   Future<List<dynamic>> getDebitos() async {
     final url = Uri.parse(
       Utils.endpoint('listarDebitosLivraria'),

@@ -1,8 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:celc_app/data/services/debitos_service.dart';
 import 'package:celc_app/presentation/widgets/debitos_card.dart';
 import 'package:celc_app/presentation/widgets/frequencia_progress.dart';
-import 'package:celc_app/presentation/pages/frequence/frequence_page.dart';
 import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
 import 'package:celc_app/core/providers/debitosProvider.dart';
 import 'package:celc_app/core/providers/homeProvider.dart';

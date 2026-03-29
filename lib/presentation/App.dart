@@ -4,7 +4,7 @@ import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'pages/home/home_page.dart';
-import 'pages/debitos/debits_page.dart';
+import 'pages/debits/debits_page.dart';
 import 'pages/frequence/frequence_page.dart';
 
 class App extends StatefulWidget {

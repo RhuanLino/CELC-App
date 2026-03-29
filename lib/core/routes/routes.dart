@@ -15,9 +15,9 @@ import '../../presentation/pages/home/home_page.dart';
 
 // Outras páginas
 import '../../presentation/pages/frequence/frequence_page.dart';
-import '../../presentation/pages/debitos/debits_page.dart';
-import '../../presentation/pages/debitos/mensalidade_screen.dart';
-import '../../presentation/pages/debitos/livraria_screen.dart';
+import '../../presentation/pages/debits/debits_page.dart';
+import '../../presentation/pages/debits/mensalidade_screen.dart';
+import '../../presentation/pages/debits/livraria_screen.dart';
 import '../../presentation/pages/perfil/perfil_screen.dart';
 
 class AppRoutes {
