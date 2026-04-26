@@ -221,7 +221,10 @@ class _ResumoDebitos extends StatelessWidget {
           _CardResumo(
             icon: Icons.receipt_long_outlined,
             label: 'Débitos Livraria',
-            valor: 'R\$ $totalDebitosLivraria',
+            valor: NumberFormat.currency(
+              locale: 'pt_BR',
+              symbol: 'R\$',
+            ).format(totalDebitosLivraria),
             color: Colors.blue.shade700,
           ),
           const SizedBox(width: 12),
@@ -332,7 +335,7 @@ class _SecaoItens extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total: R\$ ${total.toStringAsFixed(2)}',
+                  'Total: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(total)}',
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Container(
@@ -392,14 +395,17 @@ class _Item extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '$quantidade unidade${quantidade > 1 ? 's' : ''} × R\$ ${preco.toStringAsFixed(2)}',
+                  '$quantidade unidade${quantidade > 1 ? 's' : ''} × ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(preco)}',
                   style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                 ),
               ],
             ),
           ),
           Text(
-            'R\$ ${(quantidade * preco).toStringAsFixed(2)}',
+            NumberFormat.currency(
+              locale: 'pt_BR',
+              symbol: 'R\$',
+            ).format(quantidade * preco),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ],

@@ -1,13 +1,22 @@
-class TotaisDebitosModel {
+class TotaisDebitsModel {
   final bool success;
   final double totalLivraria;
+  final double totalMensalidade;
+  final double totalOutros;
 
-  TotaisDebitosModel({required this.success, required this.totalLivraria});
+  TotaisDebitsModel({
+    required this.success,
+    required this.totalLivraria,
+    required this.totalMensalidade,
+    required this.totalOutros,
+  });
 
-  factory TotaisDebitosModel.fromJson(Map<String, dynamic> json) {
-    return TotaisDebitosModel(
+  factory TotaisDebitsModel.fromJson(Map<String, dynamic> json) {
+    return TotaisDebitsModel(
       success: json['success'],
       totalLivraria: json['totalLivraria'],
+      totalMensalidade: json['totalMensalidade'],
+      totalOutros: json['totalOutros'],
     );
   }
 }

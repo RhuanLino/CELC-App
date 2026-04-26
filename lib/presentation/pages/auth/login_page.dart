@@ -1,9 +1,7 @@
 import 'package:celc_app/data/services/auth_service.dart';
 import 'package:celc_app/presentation/pages/home/home_page.dart';
 import 'package:celc_app/core/routes/routes.dart';
-import 'package:celc_app/core/providers/homeProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
         context,
       ).showSnackBar(SnackBar(content: Text(response['error'])));
     } else {
-      context.read<HomeProvider>().setNomeEspiritual(response['nome']);
       // Sucesso no login, redirecionando para a tela principal
       Navigator.pushReplacement(
         context,

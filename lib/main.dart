@@ -1,6 +1,5 @@
 import 'package:celc_app/core/utils/auth_notifier.dart';
 import 'package:celc_app/core/providers/debitosProvider.dart';
-import 'package:celc_app/core/providers/homeProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:celc_app/presentation/App.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +21,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => authNotifier),
         ChangeNotifierProvider(create: (_) => DebitosProvider()),
-        ChangeNotifierProvider(create: (_) => HomeProvider()),
       ],
       child: const App(),
     ),

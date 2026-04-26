@@ -23,6 +23,9 @@ class AuthService {
         if (responseData['token'] != null) {
           await storage.write(key: 'token', value: responseData['token']);
         }
+
+        await storage.write(key: 'nomeEspiritual', value: responseData['nome']);
+
         return responseData;
       } else {
         return {'error': 'Email ou senha incorretos'};

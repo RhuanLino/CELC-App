@@ -1,11 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:celc_app/data/models/debits_model.dart';
+import 'package:celc_app/data/services/debits_service.dart';
 import 'package:celc_app/presentation/widgets/debitos_card.dart';
 import 'package:celc_app/presentation/widgets/frequencia_progress.dart';
 import 'package:celc_app/presentation/pages/perfil/perfil_screen.dart';
-import 'package:celc_app/core/providers/debitosProvider.dart';
-import 'package:celc_app/core/providers/homeProvider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,9 +17,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
+  late Future<String?> futureNomeEspiritual;
+
+  late Future<Map<String, dynamic>> futureDebits;
+  double totalDebitsLivraria = 0.0;
+  double totalDebitsMensalidade = 0.0;
+  double totalDebitsOutros = 0.0;
+
   @override
   void initState() {
     super.initState();
+    futureNomeEspiritual = storage.read(key: 'nomeEspiritual');
+    futureDebits = DebitsService().getTotaisDebits();
+
+    futureDebits.then((json) {
+      final debito = TotaisDebitsModel.fromJson(json);
+      setState(() {
+        totalDebitsLivraria = debito.totalLivraria;
+        totalDebitsMensalidade = debito.totalMensalidade;
+        totalDebitsOutros = debito.totalOutros;
+      });
+    });
   }
 
   Color _getLightColor(Color baseColor) {
@@ -52,23 +69,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final totalLivraria =
-        Provider.of<DebitosProvider>(context).totalDebitosLivraria;
-    final nomeEspiritual = Provider.of<HomeProvider>(context).nomeEspiritual;
-
     return Scaffold(
       appBar: AppBar(
-        title: RichText(
-          text: TextSpan(
-            text: 'Olá, ',
-            style: TextStyle(color: Colors.black87, fontSize: 20),
-            children: [
-              TextSpan(
-                text: '$nomeEspiritual!',
-                style: TextStyle(fontWeight: FontWeight.bold),
+        title: FutureBuilder<String?>(
+          future: futureNomeEspiritual,
+          builder: (context, snapshot) {
+            final nome = snapshot.data ?? '';
+            return RichText(
+              text: TextSpan(
+                text: 'Olá, ',
+                style: TextStyle(color: Colors.black87, fontSize: 20),
+                children: [
+                  TextSpan(
+                    text: '$nome!',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
         actionsPadding: EdgeInsets.only(right: 15),
         actions: <Widget>[
@@ -188,7 +207,10 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 margin: EdgeInsets.only(top: 15),
-                child: DebitosCard(width: 500, valorLivraria: totalLivraria),
+                child: DebitosCard(
+                  width: 500,
+                  valorLivraria: totalDebitsLivraria,
+                ),
               ),
             ],
           ),

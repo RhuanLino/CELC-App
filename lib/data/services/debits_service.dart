@@ -73,7 +73,7 @@ class DebitsService {
     }
   }
 
-  Future<Map<String, dynamic>> getTotaisDebitos() async {
+  Future<Map<String, dynamic>> getTotaisDebits() async {
     final url = Uri.parse(Utils.endpoint('totaisDebitos'));
 
     try {
