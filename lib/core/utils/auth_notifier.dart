@@ -15,5 +15,10 @@ class AuthNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> logout() async {
+    await _storage.delete(key: 'token');
+    notifyListeners();
+  }
+
   bool get isAuthenticated => _token != null;
 }

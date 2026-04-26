@@ -26,10 +26,11 @@ class _DebitosCardState extends State<DebitosCard> {
 
   @override
   Widget build(BuildContext context) {
-    double valorMensalidade = 500;
-    double valorLivraria = 80;
-    double valorOutros = 100;
-    double valorTotal = valorMensalidade + valorLivraria + valorOutros;
+    double valorMensalidade = widget.valorMensalidade ?? 0;
+    double valorLivraria = widget.valorLivraria ?? 0;
+    double valorOutros = widget.valorOutros ?? 0;
+
+    double valorTotal = widget.valorTotal ?? (valorMensalidade + valorLivraria + valorOutros);
 
     return Container(
       width: widget.width ?? 300,

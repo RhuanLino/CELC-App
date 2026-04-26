@@ -1,17 +1,16 @@
-import 'package:celc_app/core/services/auth_requests.dart';
-import 'package:celc_app/presentation/pages/home/home_screen.dart';
-import 'package:celc_app/presentation/routes/routes.dart';
+import 'package:celc_app/data/services/auth_service.dart';
+import 'package:celc_app/presentation/pages/home/home_page.dart';
+import 'package:celc_app/core/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
 
@@ -26,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final response = await login(email, senha);
+    final response = await AuthService().login(email, senha);
 
     if (response.containsKey('error')) {
       // Se houver erro no login
@@ -37,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // Sucesso no login, redirecionando para a tela principal
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     }
   }
@@ -102,12 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(height: 8),
-            
+
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed:
-                    () => Navigator.pushNamed(context, AppRoutes.recuperarEmail),
+                    () =>
+                        Navigator.pushNamed(context, AppRoutes.recuperarEmail),
                 child: Text(
                   'Esqueceu sua senha?',
                   style: TextStyle(color: Color(0xFF199DFF)),
