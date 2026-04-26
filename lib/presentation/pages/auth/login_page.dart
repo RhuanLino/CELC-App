@@ -1,7 +1,8 @@
 import 'package:celc_app/data/services/auth_service.dart';
-import 'package:celc_app/presentation/pages/home/home_page.dart';
 import 'package:celc_app/core/routes/routes.dart';
+import 'package:celc_app/core/utils/auth_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,11 +34,8 @@ class _LoginPageState extends State<LoginPage> {
         context,
       ).showSnackBar(SnackBar(content: Text(response['error'])));
     } else {
-      // Sucesso no login, redirecionando para a tela principal
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      // Sucesso no login, atualizamos o estado de autenticação para que a navegação global (BottomNavigationBar) seja exibida
+      Provider.of<AuthNotifier>(context, listen: false).init();
     }
   }
 
