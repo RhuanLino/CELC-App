@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:celc_app/core/utils/utils.dart';
+import 'package:celc_app/data/models/debits_model.dart';
 import 'package:http/http.dart' as http;
 
 class DebitsService {
@@ -42,7 +43,7 @@ class DebitsService {
     }
   }
 
-  Future<List<dynamic>> getDebitosData() async {
+  Future<List<DebitoItemModel>> getDebitosData() async {
     final url = Uri.parse(Utils.endpoint('listarDebitosLivrariaData'));
 
     try {
@@ -53,21 +54,19 @@ class DebitsService {
       if (response.statusCode == 200) {
         final dataResponse = jsonDecode(response.body);
 
-        // Se o servidor retorna { result: [...] }
+        List<dynamic> rawList = [];
+
         if (dataResponse is Map<String, dynamic> &&
             dataResponse['result'] is List) {
-          return List<dynamic>.from(dataResponse['result']);
+          rawList = List<dynamic>.from(dataResponse['result']);
+        } else if (dataResponse is List) {
+          rawList = List<dynamic>.from(dataResponse);
         }
 
-        // Se retorna diretamente uma lista
-        if (dataResponse is List) {
-          return List<dynamic>.from(dataResponse);
-        }
-
-        return [];
-      } else {
-        return [];
+        return rawList.map((item) => DebitoItemModel.fromJson(item)).toList();
       }
+
+      return [];
     } catch (e) {
       return [];
     }

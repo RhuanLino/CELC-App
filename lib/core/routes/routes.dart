@@ -16,8 +16,6 @@ import '../../presentation/pages/home/home_page.dart';
 // Outras páginas
 import '../../presentation/pages/frequence/frequence_page.dart';
 import '../../presentation/pages/debits/debits_page.dart';
-import '../../presentation/pages/debits/mensalidade_screen.dart';
-import '../../presentation/pages/debits/livraria_screen.dart';
 import '../../presentation/pages/perfil/perfil_screen.dart';
 
 class AppRoutes {
@@ -50,8 +48,6 @@ class RouteGenerator {
     AppRoutes.home: (_) => HomePage(),
     AppRoutes.consultas: (_) => FrequencePage(),
     AppRoutes.debitos: (_) => DebitsPage(),
-    AppRoutes.mensalidade: (_) => MensalidadeScreen(),
-    AppRoutes.livraria: (_) => LivrariaScreen(),
     AppRoutes.perfil: (_) => PerfilScreen(),
   };
 }
