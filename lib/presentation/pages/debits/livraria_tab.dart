@@ -11,47 +11,6 @@ class LivrariaTab extends StatefulWidget {
   State<LivrariaTab> createState() => _LivrariaTabState();
 }
 
-class _ResumoDebitos extends StatelessWidget {
-  final double totalDebitosLivraria;
-
-  const _ResumoDebitos({required this.totalDebitosLivraria});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Row(
-        children: [
-          _CardResumo(
-            icon: Icons.receipt_long_outlined,
-            label: 'Débitos Livraria',
-            valor: NumberFormat.currency(
-              locale: 'pt_BR',
-              symbol: 'R\$',
-            ).format(totalDebitosLivraria),
-            color: Colors.blue.shade700,
-          ),
-          const SizedBox(width: 12),
-          _CardResumo(
-            icon: Icons.check_circle_outline,
-            label: 'Mensalidades Pagas',
-            valor: '0',
-            color: Colors.green.shade600,
-          ),
-          const SizedBox(width: 12),
-          _CardResumo(
-            icon: Icons.error_outline,
-            label: 'Mensalidades Pendentes',
-            valor: '0',
-            color: Colors.orange.shade800,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _LivrariaTabState extends State<LivrariaTab> {
   late Future<List<DebitoItemModel>> futureDebitos;
 
@@ -75,14 +34,13 @@ class _LivrariaTabState extends State<LivrariaTab> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _ResumoDebitos(totalDebitosLivraria: totalDebitosLivraria),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Meus Itens da Livraria',
+                'Minhas Compras na Livraria',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
@@ -149,50 +107,6 @@ class _LivrariaTabState extends State<LivrariaTab> {
   }
 }
 
-class _CardResumo extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String valor;
-  final Color color;
-
-  const _CardResumo({
-    required this.icon,
-    required this.label,
-    required this.valor,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.7)),
-          color: color.withOpacity(0.05),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 8),
-            Text(
-              valor,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[800]),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 // WIDGET PARA CADA GRUPO DE ITENS DATADO
 class _SecaoItens extends StatelessWidget {
   final String data;
@@ -214,6 +128,8 @@ class _SecaoItens extends StatelessWidget {
         isPaid ? Colors.green.shade600 : Colors.orange.shade800;
 
     return Card(
+      color: Colors.white,
+      shadowColor: Colors.black26,
       elevation: 0.5,
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(

@@ -63,6 +63,11 @@ class _AppState extends State<App> {
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _currentIndex,
               onTap: (index) => setState(() => _currentIndex = index),
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: const Color(0xFF199DFF),
+              unselectedItemColor: Colors.grey.shade600,
+              backgroundColor: Colors.white,
+              elevation: 8,
               items: const [
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
                 BottomNavigationBarItem(
@@ -72,6 +77,10 @@ class _AppState extends State<App> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.receipt_long),
                   label: 'Débitos',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Perfil',
                 ),
               ],
             ),

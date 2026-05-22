@@ -22,6 +22,7 @@ dependencies:
   fl_chart: ^1.0.0
   shelf: ^1.4.2
   shelf_proxy: ^1.0.4
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

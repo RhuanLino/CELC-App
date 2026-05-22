@@ -1,11 +1,29 @@
 // profile_screen.dart
+import 'package:celc_app/data/models/debits_model.dart';
 import 'package:celc_app/presentation/pages/auth/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:celc_app/core/utils/auth_notifier.dart';
 
-class PerfilScreen extends StatelessWidget {
+class PerfilScreen extends StatefulWidget {
   const PerfilScreen({super.key});
+
+  @override
+  State<PerfilScreen> createState() => _PerfilScreenState();
+}
+
+class _PerfilScreenState extends State<PerfilScreen> {
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
+
+  late Future<String?> futureNomeEspiritual;
+
+  @override
+  void initState() {
+    super.initState();
+    futureNomeEspiritual = storage.read(key: 'nomeEspiritual');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +69,15 @@ class PerfilScreen extends StatelessWidget {
           backgroundImage: AssetImage('assets/images/profile_placeholder.png'),
         ),
         const SizedBox(height: 16),
-        Text(
-          'Orlando Lino',
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        FutureBuilder<String?>(
+          future: futureNomeEspiritual,
+          builder: (context, snapshot) {
+            final nome = snapshot.data ?? '';
+            return Text(
+              '$nome',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            );
+          },
         ),
         const SizedBox(height: 8),
         Text(
@@ -68,42 +92,32 @@ class PerfilScreen extends StatelessWidget {
     return Column(
       children: [
         Card(
+          color: Colors.white,
+          shadowColor: Colors.black26,
+          elevation: 0.5,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: Colors.grey[200]!),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Informações Acadêmicas',
+                  'Informações Ministeriais',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 8),
-                _buildInfoRow('Matrícula', '20230001'),
-                _buildInfoRow('Curso', 'Ciência da Computação'),
-                _buildInfoRow('Período', '5º'),
+                _buildInfoRow('Nome Social', 'Orlando da Silva Lino'),
+                _buildInfoRow('Grau', '5º'),
+                _buildInfoRow('Posição', 'Sacerdote'),
               ],
             ),
           ),
         ),
         const SizedBox(height: 16),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Estatísticas',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 8),
-                _buildInfoRow('Presenças este mês', '22'),
-                _buildInfoRow('Faltas este mês', '3'),
-                _buildInfoRow('Débitos pendentes', '2'),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -139,10 +153,27 @@ class PerfilScreen extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.privacy_tip),
-          title: const Text('Política de Privacidade'),
-          onTap: () {
-            // Navegar para política de privacidade
+          leading: const Icon(Icons.message),
+          title: const Text('Contato'),
+          onTap: () async {
+            final Uri url = Uri.parse('https://wa.me/5561984785501');
+            try {
+              if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Não foi possível abrir o WhatsApp.'),
+                    ),
+                  );
+                }
+              }
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Erro ao abrir o WhatsApp.')),
+                );
+              }
+            }
           },
         ),
         const SizedBox(height: 24),
