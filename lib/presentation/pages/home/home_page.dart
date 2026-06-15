@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:celc_app/data/models/calendar_model.dart';
 import 'package:celc_app/data/models/debits_model.dart';
+import 'package:celc_app/data/services/calendar_service.dart';
 import 'package:celc_app/data/services/debits_service.dart';
 import 'package:celc_app/presentation/widgets/debitos_card.dart';
 import 'package:celc_app/presentation/widgets/frequencia_progress.dart';
@@ -18,11 +20,13 @@ class _HomePageState extends State<HomePage> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   late Future<String?> futureNomeEspiritual;
-
   late Future<Map<String, dynamic>> futureDebits;
+
   double totalDebitsLivraria = 0.0;
   double totalDebitsMensalidade = 0.0;
   double totalDebitsOutros = 0.0;
+
+  FrequenciaResumoModel? _resumo;
 
   @override
   void initState() {
@@ -38,17 +42,25 @@ class _HomePageState extends State<HomePage> {
         totalDebitsOutros = debito.totalOutros;
       });
     });
+
+    _loadFrequencia();
   }
 
-  Color _getLightColor(Color baseColor) {
-    return baseColor.withOpacity(0.06);
+  Future<void> _loadFrequencia() async {
+    final now = DateTime.now();
+    final resumo = await CalendarService().getFrequenciaResumo(
+      mes: now.month,
+      ano: now.year,
+    );
+    if (mounted) {
+      setState(() => _resumo = resumo);
+    }
   }
 
-  Color _getDarkColor(Color baseColor) {
-    return HSLColor.fromColor(baseColor)
-        .withLightness(0.6) // Ajuste este valor para mudar a escuridão
-        .toColor();
-  }
+  Color _getLightColor(Color baseColor) => baseColor.withOpacity(0.06);
+
+  Color _getDarkColor(Color baseColor) =>
+      HSLColor.fromColor(baseColor).withLightness(0.6).toColor();
 
   final List<Map<String, dynamic>> items = [
     {
@@ -69,6 +81,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Converte 0.0–1.0 para 0–100 para o widget FrequenciaProgress
+    final presencaPct = ((_resumo?.percentualPresenca ?? 0.0) * 100).round();
+    final totalAtividades = _resumo?.totalAtividades ?? 0;
+    final totalPresencas = _resumo?.totalPresencas ?? 0;
+    final totalFaltas = _resumo?.totalFaltas ?? 0;
+    final ausentePct =
+        totalAtividades > 0
+            ? ((totalFaltas / totalAtividades) * 100).round()
+            : 0;
+
     return Scaffold(
       appBar: AppBar(
         title: FutureBuilder<String?>(
@@ -78,26 +100,26 @@ class _HomePageState extends State<HomePage> {
             return RichText(
               text: TextSpan(
                 text: 'Olá, ',
-                style: TextStyle(color: Colors.black87, fontSize: 20),
+                style: const TextStyle(color: Colors.black87, fontSize: 20),
                 children: [
                   TextSpan(
                     text: '$nome!',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             );
           },
         ),
-        actionsPadding: EdgeInsets.only(right: 15),
-        actions: <Widget>[
+        actionsPadding: const EdgeInsets.only(right: 15),
+        actions: [
           IconButton(
             icon: const Icon(Icons.notifications),
             tooltip: 'Abrir notificações',
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PerfilScreen()),
+                MaterialPageRoute(builder: (_) => PerfilScreen()),
               );
             },
           ),
@@ -110,9 +132,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               LayoutBuilder(
                 builder: (context, constraints) {
-                  final itemWidth =
-                      constraints.maxWidth * 0.5; // 40% da largura
-                  final margin = 8.0; // Espaçamento entre itens
+                  final itemWidth = constraints.maxWidth * 0.5;
+                  const margin = 8.0;
 
                   return CarouselSlider(
                     options: CarouselOptions(
@@ -123,25 +144,25 @@ class _HomePageState extends State<HomePage> {
                           (itemWidth + margin) / constraints.maxWidth,
                       enableInfiniteScroll: false,
                       padEnds: false,
-                      autoPlayInterval: Duration(seconds: 6),
+                      autoPlayInterval: const Duration(seconds: 6),
                     ),
                     items:
                         items.map((item) {
                           return Container(
-                            width: itemWidth, // Largura fixa
-                            margin: EdgeInsets.only(right: margin),
+                            width: itemWidth,
+                            margin: const EdgeInsets.only(right: margin),
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.1),
-                                  offset: Offset(0, 0.5),
+                                  offset: const Offset(0, 0.5),
                                 ),
                               ],
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                                   Container(
                                     width: 35,
                                     height: 35,
-                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    margin: const EdgeInsets.only(bottom: 8.0),
                                     decoration: BoxDecoration(
                                       color: _getLightColor(item['color']),
                                       borderRadius: BorderRadius.circular(7),
@@ -162,13 +183,13 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   Text(
                                     item['title'],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 5.0),
+                                  const SizedBox(height: 5.0),
                                   Text(
                                     item['subtitle'],
                                     style: TextStyle(
@@ -176,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                                       fontSize: 12.0,
                                     ),
                                   ),
-                                  SizedBox(height: 10.0),
+                                  const SizedBox(height: 10.0),
                                   Text(
                                     item['data'],
                                     style: TextStyle(
@@ -193,20 +214,19 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               Container(
-                margin: EdgeInsets.only(top: 15),
+                margin: const EdgeInsets.only(top: 15),
                 child: FrequenciaProgress(
-                  percentage: 0,
-                  percentageAbsent: 0,
-                  presentDays: 0,
-                  absentDays: 0,
-                  // Optional parameters:
-                  width: 500, // custom width
-                  primaryColor: Colors.green, // custom primary color
-                  absentColor: Colors.red, // custom absent color
+                  percentage: presencaPct,
+                  percentageAbsent: ausentePct,
+                  presentDays: totalPresencas,
+                  absentDays: totalFaltas,
+                  width: 500,
+                  primaryColor: Colors.green,
+                  absentColor: Colors.red,
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 15),
+                margin: const EdgeInsets.only(top: 15),
                 child: DebitosCard(
                   width: 500,
                   valorLivraria: totalDebitsLivraria,

@@ -24,8 +24,8 @@ class FrequenciaProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultPrimaryColor = primaryColor ?? theme.primaryColor;
-    final defaultAbsentColor = absentColor ?? Colors.red;
+    const defaultPrimaryColor = Colors.green;
+    const defaultAbsentColor = Colors.red;
 
     return Container(
       width: width ?? 300,
@@ -55,10 +55,9 @@ class FrequenciaProgress extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => FrequencePage()),
-                    (route) => false,
+                    MaterialPageRoute(builder: (_) => const FrequencePage()),
                   );
                 },
                 child: const Text(
@@ -179,7 +178,7 @@ class FrequenciaProgress extends StatelessWidget {
                         valueColor: AlwaysStoppedAnimation<Color>(
                           _getPercentageColor(
                             percentageAbsent,
-                            defaultAbsentColor,
+                            absentColor ?? defaultAbsentColor,
                           ),
                         ),
                         minHeight: 10,
