@@ -15,6 +15,7 @@ class DebitsPage extends StatefulWidget {
 // PÁGINA PRINCIPAL QUE ORGANIZA AS ABAS
 class _DebitsPage extends State<DebitsPage> {
   double totalDebitosLivraria = 0.0;
+  double totalDebitosMensalidade = 0.0;
 
   @override
   void initState() {
@@ -24,13 +25,15 @@ class _DebitsPage extends State<DebitsPage> {
 
   Future<void> _loadTotalDebitos() async {
     try {
-      final debitoList = await DebitsService().getDebitosData();
-      final total = debitoList.fold(0.0, (sum, debito) => sum + debito.total);
-      if (mounted) {
-        setState(() {
-          totalDebitosLivraria = total;
-        });
-      }
+      final data = await DebitsService().getTotaisDebits();
+
+      if (!mounted) return;
+
+      setState(() {
+        totalDebitosLivraria = (data['totalLivraria'] ?? 0).toDouble();
+
+        totalDebitosMensalidade = (data['totalMensalidade'] ?? 0).toDouble();
+      });
     } catch (e) {
       // ignore
     }
@@ -106,7 +109,10 @@ class _DebitsPage extends State<DebitsPage> {
         ),
         body: Column(
           children: [
-            _ResumoDebitos(totalDebitosLivraria: totalDebitosLivraria),
+            _ResumoDebitos(
+              totalDebitosLivraria: totalDebitosLivraria,
+              totalDebitosMensalidade: totalDebitosMensalidade,
+            ),
             Expanded(
               child: TabBarView(
                 children: [const LivrariaTab(), MensalidadeTab()],
@@ -121,8 +127,12 @@ class _DebitsPage extends State<DebitsPage> {
 
 class _ResumoDebitos extends StatelessWidget {
   final double totalDebitosLivraria;
+  final double totalDebitosMensalidade;
 
-  const _ResumoDebitos({required this.totalDebitosLivraria});
+  const _ResumoDebitos({
+    required this.totalDebitosLivraria,
+    required this.totalDebitosMensalidade,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -142,17 +152,13 @@ class _ResumoDebitos extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           _CardResumo(
-            icon: Icons.check_circle_outline,
-            label: 'Mensalidades Pagas',
-            valor: '0',
+            icon: Icons.calendar_month,
+            label: 'Débitos Mensalidade',
+            valor: NumberFormat.currency(
+              locale: 'pt_BR',
+              symbol: 'R\$',
+            ).format(totalDebitosMensalidade),
             color: Colors.green.shade600,
-          ),
-          const SizedBox(width: 12),
-          _CardResumo(
-            icon: Icons.error_outline,
-            label: 'Mensalidades Pendentes',
-            valor: '0',
-            color: Colors.orange.shade800,
           ),
         ],
       ),
@@ -165,40 +171,81 @@ class _CardResumo extends StatelessWidget {
   final String label;
   final String valor;
   final Color color;
+  final String? warningText;
+  final IconData? warningIcon;
 
   const _CardResumo({
+    super.key,
     required this.icon,
     required this.label,
     required this.valor,
     required this.color,
+    this.warningText,
+    this.warningIcon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withValues(alpha: 0.7)),
-          color: color.withValues(alpha: 0.05),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 8),
-            Text(
-              valor,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    // Calcula uma cor legível sobre o fundo (onColor)
+    final onColor =
+        ThemeData.estimateBrightnessForColor(color) == Brightness.dark
+            ? Colors.white
+            : Colors.black87;
+
+    final onColorSubtle = onColor.withOpacity(0.75);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Ícone principal + label
+          Row(
+            children: [
+              Icon(icon, color: onColorSubtle, size: 20),
+              const SizedBox(width: 8),
+              Text(label, style: TextStyle(color: onColorSubtle, fontSize: 14)),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Valor em destaque
+          Text(
+            valor,
+            style: TextStyle(
+              color: onColor,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              letterSpacing: -0.5,
             ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[800]),
+          ),
+
+          // Aviso opcional no rodapé (ex: "2 mensalidades atrasadas")
+          if (warningText != null) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Icon(
+                  warningIcon ?? Icons.info_outline,
+                  color: onColorSubtle,
+                  size: 16,
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    warningText!,
+                    style: TextStyle(color: onColorSubtle, fontSize: 12),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
+        ],
       ),
     );
   }

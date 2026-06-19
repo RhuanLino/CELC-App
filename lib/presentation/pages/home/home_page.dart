@@ -230,6 +230,7 @@ class _HomePageState extends State<HomePage> {
                 child: DebitosCard(
                   width: 500,
                   valorLivraria: totalDebitsLivraria,
+                  valorMensalidade: totalDebitsMensalidade,
                 ),
               ),
             ],

@@ -3,22 +3,6 @@ import 'package:celc_app/data/models/calendar_model.dart';
 import 'package:celc_app/data/services/calendar_service.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const ClubManagerApp());
-
-class ClubManagerApp extends StatelessWidget {
-  const ClubManagerApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ClubManager',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
-      home: const FrequencePage(),
-    );
-  }
-}
-
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 class FrequencePage extends StatefulWidget {
   const FrequencePage({super.key});
@@ -34,16 +18,45 @@ class _FrequencePageState extends State<FrequencePage> {
   List<CalendarioItemModel> _atividades = [];
   bool _loading = true;
 
+  // Seletor: por padrão mês anterior ao atual
+  late int _mesSelecionado;
+  late int _anoSelecionado;
+
+  static const _meses = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ];
+
   @override
   void initState() {
     super.initState();
+    final now = DateTime.now();
+    // Mês anterior (se janeiro, vai para dezembro do ano anterior)
+    if (now.month == 1) {
+      _mesSelecionado = 12;
+      _anoSelecionado = now.year - 1;
+    } else {
+      _mesSelecionado = now.month - 1;
+      _anoSelecionado = now.year;
+    }
     _load();
   }
 
   Future<void> _load() async {
-    final now = DateTime.now();
+    setState(() => _loading = true);
+
     final results = await Future.wait([
-      _service.getFrequenciaResumo(mes: now.month, ano: now.year),
+      _service.getFrequenciaResumo(mes: _mesSelecionado, ano: _anoSelecionado),
       _service.getCalendario(),
     ]);
 
@@ -54,37 +67,218 @@ class _FrequencePageState extends State<FrequencePage> {
     });
   }
 
+  // Gera lista de meses disponíveis: do mais antigo até o mês anterior ao atual
+  List<({int mes, int ano})> _mesesDisponiveis() {
+    final now = DateTime.now();
+    // Limita a 24 meses para trás
+    final options = <({int mes, int ano})>[];
+    for (int i = 1; i <= 24; i++) {
+      final dt = DateTime(now.year, now.month - i);
+      options.add((mes: dt.month, ano: dt.year));
+    }
+    return options.reversed.toList();
+  }
+
+  void _abrirSeletor() async {
+    final opcoes = _mesesDisponiveis();
+    final selecionado = await showModalBottomSheet<({int mes, int ano})>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder:
+          (ctx) => _MesSelectorSheet(
+            opcoes: opcoes,
+            mesSelecionado: _mesSelecionado,
+            anoSelecionado: _anoSelecionado,
+            meses: _meses,
+          ),
+    );
+
+    if (selecionado != null) {
+      setState(() {
+        _mesSelecionado = selecionado.mes;
+        _anoSelecionado = selecionado.ano;
+      });
+      _load();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child:
-                      _loading
-                          ? const Center(child: CircularProgressIndicator())
-                          : SingleChildScrollView(
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _DashboardSection(resumo: _resumo),
-                                const SizedBox(height: 16),
-                                const _MonthlyHistorySection(),
-                                const SizedBox(height: 16),
-                                _NextClassesSection(atividades: _atividades),
-                              ],
+            // ── Seletor de mês/ano ──────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: InkWell(
+                onTap: _abrirSeletor,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: cs.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: cs.outlineVariant),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Frequência de',
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: cs.onSurfaceVariant),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${_meses[_mesSelecionado - 1]} $_anoSelecionado',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleMedium?.copyWith(
+                              color: cs.onSurface,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
+                        ],
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: cs.primary,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
+            ),
+            // ── Conteúdo ────────────────────────────────────────────────────
+            Expanded(
+              child:
+                  _loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _DashboardSection(resumo: _resumo),
+                            const SizedBox(height: 16),
+                            const _MonthlyHistorySection(),
+                            const SizedBox(height: 16),
+                            _NextClassesSection(atividades: _atividades),
+                          ],
+                        ),
+                      ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+// ─── Bottom Sheet Seletor ─────────────────────────────────────────────────────
+class _MesSelectorSheet extends StatelessWidget {
+  final List<({int mes, int ano})> opcoes;
+  final int mesSelecionado;
+  final int anoSelecionado;
+  final List<String> meses;
+
+  const _MesSelectorSheet({
+    required this.opcoes,
+    required this.mesSelecionado,
+    required this.anoSelecionado,
+    required this.meses,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return DraggableScrollableSheet(
+      initialChildSize: 0.5,
+      minChildSize: 0.35,
+      maxChildSize: 0.75,
+      expand: false,
+      builder: (ctx, scrollController) {
+        return Column(
+          children: [
+            // Handle
+            Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: cs.outlineVariant,
+                borderRadius: BorderRadius.circular(99),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    'Selecionar período',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: cs.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.close, color: cs.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: opcoes.length,
+                itemBuilder: (ctx, i) {
+                  final op = opcoes[i];
+                  final isSelected =
+                      op.mes == mesSelecionado && op.ano == anoSelecionado;
+                  return ListTile(
+                    onTap: () => Navigator.pop(context, op),
+                    selected: isSelected,
+                    selectedTileColor: cs.primaryContainer.withOpacity(0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 2,
+                    ),
+                    title: Text(
+                      '${meses[op.mes - 1]} ${op.ano}',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: isSelected ? cs.primary : cs.onSurface,
+                        fontWeight:
+                            isSelected ? FontWeight.w600 : FontWeight.normal,
+                      ),
+                    ),
+                    trailing:
+                        isSelected
+                            ? Icon(Icons.check_circle, color: cs.primary)
+                            : null,
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -95,9 +289,8 @@ class _DashboardSection extends StatelessWidget {
   const _DashboardSection({required this.resumo});
 
   String _presencaLabel(double p) {
-    if (p <= 0.25) return 'Sentimos sua falta';
-    if (p <= 0.50) return 'Continue caminhando conosco';
-    if (p <= 0.75) return 'Você está fazendo a diferença';
+    if (p <= 0.50) return 'Sentimos sua falta';
+    if (p >= 0.70) return 'Você está fazendo a diferença';
     return 'Juntos somos mais fortes';
   }
 
@@ -222,6 +415,19 @@ class _AttendanceCircleState extends State<_AttendanceCircle>
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) _controller.forward();
     });
+  }
+
+  @override
+  void didUpdateWidget(_AttendanceCircle old) {
+    super.didUpdateWidget(old);
+    if (old.percentage != widget.percentage) {
+      _controller.reset();
+      _animation = Tween<double>(
+        begin: 0,
+        end: widget.percentage,
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+      _controller.forward();
+    }
   }
 
   @override
@@ -769,8 +975,6 @@ class _GlassCard extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
 
     if (leftBorderColor != null) {
-      // Quando há cor diferente na borda esquerda, não podemos usar borderRadius
-      // com Border não uniforme — usamos ClipRRect + Row para simular
       return ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Container(
